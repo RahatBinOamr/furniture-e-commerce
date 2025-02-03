@@ -46,9 +46,11 @@
 							<a class="nav-link" href=" {{home_url}} ">Home</a>
 						</li>
 						<li><a class="nav-link" href="shop.html">Shop</a></li>
+
             {% url 'about' as about_url %}
 						<li class ="nav-item {% if request.path == about_url %}active{% endif %}" ><a class="nav-link " href="{{about_url}}">About us</a></li>
-						<li><a class="nav-link" href="services.html">Services</a></li>
+            {% url 'service' as service_url %}
+						<li class="nav-item {% if request.path == service_url %}active{% endif %}" ><a class="nav-link" href="{{service_url}}">Services</a></li>
 						<li><a class="nav-link" href="blog.html">Blog</a></li>
 						<li><a class="nav-link" href="contact.html">Contact us</a></li>
 					</ul>
