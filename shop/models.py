@@ -56,6 +56,17 @@ class CartItem(models.Model):
     def total_price(self):
         return self.quantity * self.product.price
     
+    def increment_quantity(self):
+        self.quantity += 1
+        self.save()
+
+    def decrement_quantity(self):
+        if self.quantity > 1:
+            self.quantity -= 1
+            self.save()
+        else:
+            self.delete()
+    
 class Customer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)  
     session_key = models.CharField(max_length=200, blank=True, null=True)

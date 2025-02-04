@@ -69,3 +69,22 @@ def view_cart(request):
         'total_price': total_price,
     }
     return render(request, 'cart.html', context)
+
+
+def increment_item(request, id):
+    cart_item = get_object_or_404(CartItem, id=id)
+    cart_item.increment_quantity()
+    messages.success(request,'increment successfully')
+    return redirect('view_cart')
+
+def decrement_item(request, id):
+    cart_item = get_object_or_404(CartItem, id=id)
+    cart_item.decrement_quantity()
+    messages.success(request,'decrement successfully')
+    return redirect('view_cart')
+
+def remove_item(request, id):
+    cart_item = get_object_or_404(CartItem, id=id)
+    cart_item.delete()
+    messages.success(request,'remove successfully')
+    return redirect('view_cart')

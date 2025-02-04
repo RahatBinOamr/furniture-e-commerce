@@ -27,7 +27,8 @@
                     <img
                       src="{{item.product.image.url}}"
                       alt="Image"
-                      class="img-fluid"
+                    
+                      class="img-fluid "
                     />
                   </td>
                   <td class="product-name">
@@ -40,12 +41,14 @@
                       style="max-width: 120px"
                     >
                       <div class="input-group-prepend">
+                      <a href="{% url 'decrement_item' item.id %}">
                         <button
                           class="btn btn-outline-black decrease"
                           type="button"
                         >
                           &minus;
                         </button>
+                      </a>
                       </div>
                       <input
                         type="text"
@@ -56,17 +59,19 @@
                         aria-describedby="button-addon1"
                       />
                       <div class="input-group-append">
+                      <a href="{% url 'increment_item' item.id %}">
                         <button
                           class="btn btn-outline-black increase"
                           type="button"
                         >
                           &plus;
                         </button>
+                      </a>
                       </div>
                     </div>
                   </td>
                   <td>$ {{item.total_price}} </td>
-                  <td><a href="#" class="btn btn-black btn-sm">X</a></td>
+                  <td><a href="{% url 'remove_item' item.id %}" class="btn btn-black btn-sm">X</a></td>
                 </tr>
               {% endfor %}
 
@@ -83,9 +88,12 @@
           <div class="row mb-5">
             
             <div class="col-md-6">
-              <button class="btn btn-outline-black btn-sm btn-block">
-                Continue Shopping
-              </button>
+              <a href="{% url 'shop' %}">
+                <button class="btn btn-outline-black btn-sm btn-block">
+                  Continue Shopping
+                </button>
+              </a>
+            
             </div>
           </div>
           <div class="row">
@@ -119,7 +127,7 @@
                   <span class="text-black">Subtotal</span>
                 </div>
                 <div class="col-md-6 text-right">
-                  <strong class="text-black">$230.00</strong>
+                  <strong class="text-black">${{total_price}} </strong>
                 </div>
               </div>
               <div class="row mb-5">
@@ -127,7 +135,7 @@
                   <span class="text-black">Total</span>
                 </div>
                 <div class="col-md-6 text-right">
-                  <strong class="text-black">$230.00</strong>
+                  <strong class="text-black">${{total_price}}</strong>
                 </div>
               </div>
 
