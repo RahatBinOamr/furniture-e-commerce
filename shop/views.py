@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .models import Product, Category
+from django.contrib import messages
+from .models import Cart, CartItem, Product, Category
 
-def productView(request):
+def product_view(request):
     products = Product.objects.all().distinct()  
 
     # Search functionality
@@ -37,3 +38,34 @@ def productView(request):
     }
 
     return render(request, 'product.html', context)
+
+
+def add_to_cart(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+    if not item_created:
+        cart_item.quantity += 1
+        cart_item.save()
+    messages.success(request,'add to cart successfully')
+    return redirect('shop')
+
+def view_cart(request):
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        cart, created = Cart.objects.get_or_create(session_key=session_key)
+
+    cart_items = cart.items.all()
+    total_price = sum(item.total_price() for item in cart_items)
+
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+    }
+    return render(request, 'cart.html', context)

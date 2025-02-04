@@ -66,9 +66,23 @@
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="#"><img src="{% static 'images/user.svg' %}"></a></li>
-						<li><a class="nav-link" href="cart.html"><img src="{% static 'images/cart.svg' %}"></a></li>
+							<li class="nav-item">
+									<a class="nav-link" href="#">
+											<img src="{% static 'images/user.svg' %}" alt="User">
+									</a>
+							</li>
+							<li class="nav-item position-relative">
+									<a class="nav-link" href="{% url 'view_cart' %}">
+											<img src="{% static 'images/cart.svg' %}" alt="Cart">
+											{% if cart_item_count and cart_item_count > 0 %}
+													<span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
+															{{ cart_item_count }}
+													</span>
+											{% endif %}
+									</a>
+							</li>
 					</ul>
+
 				</div>
 			</div>
 				
@@ -194,7 +208,7 @@
                 text: "{{ message }}",
                 duration: 3000, // 3 seconds
                 gravity: "top", // Position: top, bottom
-                position: "right", // left, center, right
+                position: "center", // left, center, right
                 style: {
                   background: "linear-gradient(to right, #ff416c, #f9bf29, #ff4b2b)",
               }
