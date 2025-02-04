@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from .models import Contact
+from shop.models import *
 # Create your views here.
 def homePage(request):
   return render(request, 'home.html')
