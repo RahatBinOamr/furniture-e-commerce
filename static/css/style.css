@@ -709,3 +709,119 @@ textarea {
     height: 50px;
     border-radius: 50%;
     background: rgba(59, 93, 80, 0.2); }
+
+
+  .modal-lg {
+      max-width: 800px;
+  }
+  
+  .product-thumbnail {
+      transition: transform 0.3s ease;
+  }
+  
+  .product-thumbnail:hover {
+      transform: scale(1.05);
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.pagination .page-item .page-link {
+    
+    color: black;
+    border: none;
+    margin: 0 5px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #f9bf29; /* Darker gold for active page */
+    color: white;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #3b5d50; /* Slightly darker gold on hover */
+    color: white;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: #3b5d50;
+    color: gray;
+    cursor: not-allowed;
+}
+
+.hero-section {
+  position: relative;
+  height: 65vh; /* Adjust if needed */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  text-align: center;
+  color: white;
+  padding: 50px 0;
+}
+.hero-content {
+  max-width: 600px; /* Controls content width */
+  margin: 0 auto; /* Ensures centering */
+}
+
+.hero-title {
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  margin-top: 15px;
+  margin-bottom: 30px;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center; /* Centers the search form */
+  gap: 10px;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 15px;
+  border: 2px solid gold;
+  border-radius: 30px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-button {
+  background-color: gold;
+  color: black;
+  font-weight: bold;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 1rem;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-button:hover {
+  background-color: #b8860b; /* Darker gold */
+  color: white;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
