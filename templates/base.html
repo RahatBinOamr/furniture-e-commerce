@@ -48,8 +48,10 @@
 						<li class="nav-item {% if request.path == home_url %}active{% endif %}">
 							<a class="nav-link" href=" {{home_url}} ">Home</a>
 						</li>
-
-						<li><a class="nav-link" href="shop.html">Shop</a></li>
+						{% url 'shop' as shop_url %}
+						<li class="nav-item {% if request.path == shop_url %}active{% endif %}">
+						<a class="nav-link" href="{{shop_url}}">Shop</a>
+						</li>
 
             {% url 'about' as about_url %}
 						<li class ="nav-item {% if request.path == about_url %}active{% endif %}" ><a class="nav-link " href="{{about_url}}">About us</a></li>
