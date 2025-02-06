@@ -4,7 +4,10 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
 from django.urls import reverse
-
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from io import BytesIO
 from shop.forms import CustomerForm
 from .models import Cart, CartItem, Customer, Order, OrderItem, Product, Category
 
@@ -212,5 +215,28 @@ def checkout_success(request):
     }
     return render(request, 'checkout_success.html', context)
 
+
+def download_invoice(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    customer = order.customer
+    order_items = order.items.all()
+
+    # Render the invoice HTML
+    html_string = render_to_string('invoice_template.html', {
+        'order': order,
+        'customer': customer,
+        'order_items': order_items,
+    })
+    
+    # Generate PDF in memory
+    pdf_file = BytesIO()
+    HTML(string=html_string).write_pdf(pdf_file)
+    pdf_file.seek(0)
+
+    # Return PDF as a downloadable response
+    response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="invoice_{order.id}.pdf"'
+    
+    return response
 def checkout_cancel(request):
     return render(request, 'checkout_cancel.html')

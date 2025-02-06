@@ -9,5 +9,6 @@ urlpatterns =[
   path('remove-item/<int:id>',remove_item,name='remove_item'),
   path('checkout/', checkout, name='checkout'),
   path('checkout/success/', checkout_success, name='checkout_success'),
+  path('download-invoice/<int:order_id>/', download_invoice, name='download_invoice'),
   path('checkout/cancel/', checkout_cancel, name='checkout_cancel'),
 ]

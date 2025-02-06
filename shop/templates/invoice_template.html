@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .invoice-box { border: 1px solid #ddd; padding: 20px; max-width: 700px; margin: auto; }
+        h2 { text-align: center; }
+        .details { display: flex; justify-content: space-between; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .total { font-weight: bold; text-align: right; }
+        .footer { margin-top: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="invoice-box">
+        <h2>INVOICE</h2>
+        <div class="details">
+            <div>
+                <p><strong>Invoice No:</strong> {{ order.id }}</p>
+                <p><strong>Date:</strong> {{ order.created_at|date:"d F Y" }}</p>
+            </div>
+            <div>
+                <p><strong>Bill To:</strong></p>
+                <p>{{ customer.name }}</p>
+                <p>{{ customer.mobile }}</p>
+                <p>{{ customer.address }}, {{ customer.city }}, {{ customer.state }}, {{ customer.zip_code }}</p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price }}</td>
+                    <td>${{ item.total_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p class="total">Total: ${{ order.total_price }}</p>
+
+        <div class="footer">
+            <p>Thank you for your purchase!</p>
+        </div>
+    </div>
+</body>
+</html>
