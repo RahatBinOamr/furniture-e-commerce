@@ -89,7 +89,7 @@
             
             <div class="col-md-6">
               <a href="{% url 'shop' %}">
-                <button class="btn btn-outline-black btn-sm btn-block">
+                <button class="btn btn-outline-warning btn-sm btn-warning">
                   Continue Shopping
                 </button>
               </a>
@@ -110,7 +110,7 @@
               />
             </div>
             <div class="col-md-4">
-              <button class="btn btn-black">Apply Coupon</button>
+              <button class="btn btn-warning">Apply Coupon</button>
             </div>
           </div>
         </div>
@@ -141,12 +141,14 @@
 
               <div class="row">
                 <div class="col-md-12">
+                <a href="{% url 'checkout' %}">
                   <button
-                    class="btn btn-black btn-lg py-3 btn-block"
-                    onclick="window.location='checkout.html'"
+                    class="btn btn-warning btn-lg py-3 btn-block"
+                    
                   >
                     Proceed To Checkout
                   </button>
+                  </a>
                 </div>
               </div>
             </div>

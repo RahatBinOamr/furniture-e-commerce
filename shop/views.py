@@ -1,8 +1,12 @@
+from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
-from .models import Cart, CartItem, Product, Category
+from django.urls import reverse
+
+from shop.forms import CustomerForm
+from .models import Cart, CartItem, Customer, Order, OrderItem, Product, Category
 
 def product_view(request):
     products = Product.objects.all().distinct()  
@@ -88,3 +92,125 @@ def remove_item(request, id):
     cart_item.delete()
     messages.success(request,'remove successfully')
     return redirect('view_cart')
+
+import stripe
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+def checkout(request):
+    if request.method == 'POST':
+        print("Checkout form submitted")  # Debugging print statement
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            print("Form is valid")  # Debugging print statement
+            customer = form.save(commit=False)
+            if request.user.is_authenticated:
+                customer.user = request.user  
+            customer.save()
+
+            # Retrieve cart items for the user or session
+            try:
+                if request.user.is_authenticated:
+                    cart = get_object_or_404(Cart, user=request.user)
+                else:
+                    cart = get_object_or_404(Cart, session_key=request.session.session_key)
+            except Exception as e:
+                print("Error retrieving cart:", e)
+                messages.error(request, "Cart not found")
+                return redirect('cart_page')
+
+            cart_items = cart.items.all()
+            total_price = sum(item.total_price() for item in cart_items)
+
+            # Debugging
+            print(f"Total Price: {total_price}")
+
+            try:
+                checkout_session = stripe.checkout.Session.create(
+                    payment_method_types=['card'],
+                    line_items=[
+                        {
+                            'price_data': {
+                                'currency': 'usd',
+                                'product_data': {'name': 'Your Order'},
+                                'unit_amount': int(total_price * 100),  # Convert to cents
+                            },
+                            'quantity': 1,
+                        }
+                    ],
+                    mode='payment',
+                    
+                    success_url=request.build_absolute_uri(reverse('checkout_success')),
+                    cancel_url=request.build_absolute_uri(reverse('checkout_cancel')),
+                )
+                print("Stripe session created successfully")
+                return redirect(checkout_session.url)
+            except Exception as e:
+                print("Stripe error:", e)
+                messages.error(request, "Error processing payment")
+                return redirect('checkout_page')
+
+        else:
+            print("Form is invalid", form.errors)  # Debugging print statement
+            messages.error(request, "Invalid form submission")
+            return render_checkout_page(request, form)
+    
+    return render_checkout_page(request, CustomerForm())
+
+
+
+def render_checkout_page(request, form):
+    if request.user.is_authenticated:
+        cart = get_object_or_404(Cart, user=request.user)
+    else:
+        cart = get_object_or_404(Cart, session_key=request.session.session_key)
+    
+    cart_items = cart.items.all()
+    total_price = sum(item.total_price() for item in cart_items)
+    
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'form': form,
+    }
+    return render(request, 'checkout.html', context)
+
+def checkout_success(request):
+    if request.user.is_authenticated:
+        customer = Customer.objects.filter(user=request.user).latest('id')
+        cart = get_object_or_404(Cart, user=request.user)
+    else:
+        customer = Customer.objects.filter(session_key=request.session.session_key).latest('id')
+        cart = get_object_or_404(Cart, session_key=request.session.session_key)
+    
+    cart_items = cart.items.all()
+    total_price = sum(item.total_price() for item in cart_items)
+    messages.success(request,'order checkout successful')
+    # Create order
+    order = Order.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        session_key=request.session.session_key if not request.user.is_authenticated else None,
+        customer=customer,
+        total_price=total_price,
+        is_paid=True,
+    )
+
+    # Create order items
+    for cart_item in cart_items:
+        OrderItem.objects.create(
+            order=order,
+            product=cart_item.product,
+            quantity=cart_item.quantity,
+            price=cart_item.product.price,
+        )
+
+    # Clear the cart
+    cart.items.all().delete()
+    
+    context = {
+        'order': order,
+        'customer': customer,
+    }
+    return render(request, 'checkout_success.html', context)
+
+def checkout_cancel(request):
+    return render(request, 'checkout_cancel.html')

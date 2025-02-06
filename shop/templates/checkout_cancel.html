@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+checkout cancel
+{% endblock title %}
+
+{% block content %}
+<h1 class="text-center mb-4">Payment Canceled</h1>
+<div class="alert alert-warning" role="alert">
+    Your payment was canceled. You can return to your cart to complete your purchase.
+</div>
+<a href="{% url 'shop' %}" class="btn btn-primary">Return to Cart</a>
+{% endblock %}
