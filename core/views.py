@@ -4,13 +4,17 @@ from .models import Contact
 from shop.models import *
 # Create your views here.
 def homePage(request):
-  return render(request, 'home.html')
+  products = Product.objects.all()[:3]
+  context ={"products": products}
+  return render(request, 'home.html',context)
 
 def aboutPage(request):
   return render(request, 'about.html')
 
 def servicePage(request):
-  return render(request, 'services.html')
+  products = Product.objects.all()[:3]
+  context ={"products": products}
+  return render(request, 'services.html',context)
 
 def contactPage(request):
     if request.method == 'POST':
@@ -32,3 +36,6 @@ def contactPage(request):
             messages.error(request, "All fields are required!")
 
     return render(request, 'contact.html')
+
+def blogPage(request):
+   return render(request, 'blog.html')

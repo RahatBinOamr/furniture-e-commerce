@@ -58,8 +58,10 @@
 
             {% url 'service' as service_url %}
 						<li class="nav-item {% if request.path == service_url %}active{% endif %}" ><a class="nav-link" href="{{service_url}}">Services</a></li>
-
-						<li><a class="nav-link" href="blog.html">Blog</a></li>
+						{% url 'blog' as blog_url %}
+						<li class="nav-item {% if request.path == blog_url %}active{% endif %}">
+						<a class="nav-link" href="{{blog_url}}">Blog</a>
+						</li>
 
             {% url 'contact' as contact_url %}
 						<li class="nav-item {% if request.path == contact_url %}active{% endif %}" ><a class="nav-link" href="{{contact_url}}">Contact us</a></li>

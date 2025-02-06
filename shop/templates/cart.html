@@ -5,6 +5,7 @@
 
   <div class="untree_co-section before-footer-section">
     <div class="container">
+      {% if cart_items %}
       <div class="row mb-5">
         <form class="col-md-12" method="post">
           <div class="site-blocks-table">
@@ -20,64 +21,35 @@
                 </tr>
               </thead>
               <tbody>
-
               {% for item in cart_items %}
               <tr>
                   <td class="product-thumbnail">
-                    <img
-                      src="{{item.product.image.url}}"
-                      alt="Image"
-                    
-                      class="img-fluid "
-                    />
+                    <img src="{{ item.product.image.url }}" alt="Image" class="img-fluid" />
                   </td>
                   <td class="product-name">
-                    <h2 class="h5 text-black"> {{item.product.name}} </h2>
+                    <h2 class="h5 text-black">{{ item.product.name }}</h2>
                   </td>
-                  <td>$ {{item.product.price}} </td>
+                  <td>$ {{ item.product.price }} </td>
                   <td>
-                    <div
-                      class="input-group mb-3 d-flex align-items-center quantity-container"
-                      style="max-width: 120px"
-                    >
+                    <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px">
                       <div class="input-group-prepend">
-                      <a href="{% url 'decrement_item' item.id %}">
-                        <button
-                          class="btn btn-outline-black decrease"
-                          type="button"
-                        >
-                          &minus;
-                        </button>
-                      </a>
+                        <a href="{% url 'decrement_item' item.id %}">
+                          <button class="btn btn-outline-black decrease" type="button">&minus;</button>
+                        </a>
                       </div>
-                      <input
-                        type="text"
-                        class="form-control text-center quantity-amount"
-                        value=" {{item.quantity}} "
-                        placeholder=""
-                        aria-label="Example text with button addon"
-                        aria-describedby="button-addon1"
-                      />
+                      <input type="text" class="form-control text-center quantity-amount" value="{{ item.quantity }}" readonly />
                       <div class="input-group-append">
-                      <a href="{% url 'increment_item' item.id %}">
-                        <button
-                          class="btn btn-outline-black increase"
-                          type="button"
-                        >
-                          &plus;
-                        </button>
-                      </a>
+                        <a href="{% url 'increment_item' item.id %}">
+                          <button class="btn btn-outline-black increase" type="button">&plus;</button>
+                        </a>
                       </div>
                     </div>
                   </td>
-                  <td>$ {{item.total_price}} </td>
+                  <td>$ {{ item.total_price }} </td>
                   <td><a href="{% url 'remove_item' item.id %}" class="btn btn-black btn-sm">X</a></td>
                 </tr>
               {% endfor %}
-
-                
               </tbody>
-
             </table>
           </div>
         </form>
@@ -86,14 +58,8 @@
       <div class="row">
         <div class="col-md-6">
           <div class="row mb-5">
-            
             <div class="col-md-6">
-              <a href="{% url 'shop' %}">
-                <button class="btn btn-outline-warning btn-sm btn-warning">
-                  Continue Shopping
-                </button>
-              </a>
-            
+              <a href="{% url 'shop' %}" class="btn btn-outline-warning btn-sm btn-warning">Continue Shopping</a>
             </div>
           </div>
           <div class="row">
@@ -102,12 +68,7 @@
               <p>Enter your coupon code if you have one.</p>
             </div>
             <div class="col-md-8 mb-3 mb-md-0">
-              <input
-                type="text"
-                class="form-control py-3"
-                id="coupon"
-                placeholder="Coupon Code"
-              />
+              <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code" />
             </div>
             <div class="col-md-4">
               <button class="btn btn-warning">Apply Coupon</button>
@@ -127,7 +88,7 @@
                   <span class="text-black">Subtotal</span>
                 </div>
                 <div class="col-md-6 text-right">
-                  <strong class="text-black">${{total_price}} </strong>
+                  <strong class="text-black">${{ total_price }}</strong>
                 </div>
               </div>
               <div class="row mb-5">
@@ -135,28 +96,26 @@
                   <span class="text-black">Total</span>
                 </div>
                 <div class="col-md-6 text-right">
-                  <strong class="text-black">${{total_price}}</strong>
+                  <strong class="text-black">${{ total_price }}</strong>
                 </div>
               </div>
-
               <div class="row">
                 <div class="col-md-12">
-                <a href="{% url 'checkout' %}">
-                  <button
-                    class="btn btn-warning btn-lg py-3 btn-block"
-                    
-                  >
-                    Proceed To Checkout
-                  </button>
-                  </a>
+                  <a href="{% url 'checkout' %}" class="btn btn-warning btn-lg py-3 btn-block">Proceed To Checkout</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {% else %}
+      <div class="row">
+        <div class="col-12 text-center">
+          <div class="alert alert-warning" role="alert">Your cart is empty. <a href="{% url 'shop' %}" class="alert-link">Continue Shopping</a></div>
+        </div>
+      </div>
+      {% endif %}
     </div>
   </div>
 
-<!-- Start Footer Section -->
 {% endblock content %}
