@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Shop Assistant {% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="hero-section text-center bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <h1 class="hero-title display-4">Find Your Perfect Style</h1>
+        <p class="hero-subtitle lead">Ask for any product, and we'll find it for you!</p>
+        <button id="voice-search-btn" class="btn btn-light btn-lg">
+            🎤 Ask for a Product
+        </button>
+        <p id="voice-status" class="mt-2">Click the button and say a product name.</p>
+        <audio id="audio-player" controls style="display: none;"></audio>
+    </div>
+</div>
+
+<!-- Products Section (Initially Empty) -->
+<div class="container mt-5">
+    <div class="row" id="product-container">
+        <div class="col-12 text-center">
+            <p id="no-products">No products available. Ask for a product!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Voice search functionality
+    document.getElementById('voice-search-btn').addEventListener('click', function() {
+        let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+        recognition.start();
+
+        recognition.onstart = function() {
+            document.getElementById('voice-status').innerText = "Listening...";
+        };
+
+        recognition.onspeechend = function() {
+            recognition.stop();
+            document.getElementById('voice-status').innerText = "Processing...";
+        };
+
+        recognition.onresult = function(event) {
+            let voiceQuery = event.results[0][0].transcript;
+            document.getElementById('voice-status').innerText = "You asked: " + voiceQuery;
+
+            fetch(`/voice-query/?query=${voiceQuery}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('voice-status').innerText = data.message;
+                let productContainer = document.getElementById('product-container');
+                productContainer.innerHTML = ''; // Clear previous results
+                
+                if (data.products.length > 0) {
+                    data.products.forEach(product => {
+                        let productHTML = `
+                            <div class="col-12 col-md-4 col-lg-3 mb-5">
+                                <div class="card product-card">
+                                    <a href="/product/${product.slug}/">
+                                        <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${product.name}</h5>
+                                            <p class="card-text">${product.description}</p>
+                                            <p class="card-text"><strong>Price:</strong> $${product.price}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                        productContainer.innerHTML += productHTML;
+                    });
+                } else {
+                    productContainer.innerHTML = '<div class="col-12 text-center"><p id="no-products">No products found. Try again!</p></div>';
+                }
+
+                // Play response audio
+                let audioPlayer = document.getElementById('audio-player');
+                audioPlayer.src = data.audio_url;
+                audioPlayer.style.display = "block";
+                audioPlayer.play();
+            });
+        };
+    });
+</script>
+
+{% endblock content %}

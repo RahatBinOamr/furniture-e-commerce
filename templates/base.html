@@ -65,6 +65,8 @@
 
             {% url 'contact' as contact_url %}
 						<li class="nav-item {% if request.path == contact_url %}active{% endif %}" ><a class="nav-link" href="{{contact_url}}">Contact us</a></li>
+            {% url 'assistant' as assistant_url %}
+						<li class="nav-item {% if request.path == assistant_url %}active{% endif %}" ><a class="nav-link" href="{{assistant_url}}">Support Voice</a></li>
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
