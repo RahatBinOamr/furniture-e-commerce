@@ -52,4 +52,5 @@ def voice_query(request):
 def product_detail(request, slug):
     # Fetch the product by slug
     product = get_object_or_404(Product, slug=slug)
-    return render(request, 'assistant/product_detail.html', {'product': product})
+    related_products = Product.objects.filter(subcategory__category_id=product.subcategory.category).exclude(id=product.id)
+    return render(request, 'assistant/product_detail.html', {'product': product,'related_products': related_products})
